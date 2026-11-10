@@ -26,7 +26,6 @@
         .glow-effect {
             box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
         }
-        /* Скрытие полосы прокрутки для фильтров на мобильных */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
@@ -115,7 +114,6 @@
 
         <!-- Фильтры и поиск -->
         <div class="bg-cardBg border border-cardBorder rounded-2xl p-3 shadow-lg space-y-2.5">
-            <!-- Горизонтальные фильтры с прокруткой -->
             <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
                 <button onclick="filterTime('next3h')" id="filter-next3h" class="px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all whitespace-nowrap active:scale-95">⚡ Ближайшие 3ч</button>
                 <button onclick="filterTime('all')" id="filter-all" class="px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all whitespace-nowrap active:scale-95">Все</button>
@@ -123,7 +121,6 @@
                 <button onclick="filterTime('day')" id="filter-day" class="px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all whitespace-nowrap active:scale-95">День</button>
                 <button onclick="filterTime('evening')" id="filter-evening" class="px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all whitespace-nowrap active:scale-95">Вечер</button>
             </div>
-            <!-- Поиск -->
             <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-zinc-500">
                     <i class="fa-solid fa-search text-[11px]"></i>
@@ -166,48 +163,52 @@
             if (direction === 'mih-minsk') {
                 return [
                     { name: 'Михановичи', time: depTime, type: 'отправление' },
-                    { name: 'Мачулищи', time: `${addMinutes(h, m, 5)} - ${addMinutes(h, m, 6)}`, type: 'остановка 1 мин' },
-                    { name: 'Колядичи', time: `${addMinutes(h, m, 11)} - ${addMinutes(h, m, 12)}`, type: 'остановка 1 мин' },
-                    { name: 'Минск-Южный', time: `${addMinutes(h, m, 16)} - ${addMinutes(h, m, 17)}`, type: 'остановка 1 мин' },
-                    { name: 'Минск-Пассажирский', time: addMinutes(h, m, 22), type: 'прибытие' }
+                    { name: 'Асеевка', time: `${addMinutes(h, m, 3)} - ${addMinutes(h, m, 4)}`, type: 'остановка 1 мин' },
+                    { name: 'Мачулищи', time: `${addMinutes(h, m, 7)} - ${addMinutes(h, m, 8)}`, type: 'остановка 1 мин' },
+                    { name: 'Колядичи', time: `${addMinutes(h, m, 12)} - ${addMinutes(h, m, 13)}`, type: 'остановка 1 мин' },
+                    { name: 'Лошица', time: `${addMinutes(h, m, 16)} - ${addMinutes(h, m, 17)}`, type: 'остановка 1 мин' },
+                    { name: 'Минск-Южный', time: `${addMinutes(h, m, 20)} - ${addMinutes(h, m, 21)}`, type: 'остановка 1 мин' },
+                    { name: 'Минск-Пассажирский', time: addMinutes(h, m, 24), type: 'прибытие' }
                 ];
             } else {
                 return [
                     { name: 'Минск-Пассажирский', time: depTime, type: 'отправление' },
-                    { name: 'Минск-Южный', time: `${addMinutes(h, m, 5)} - ${addMinutes(h, m, 6)}`, type: 'остановка 1 мин' },
-                    { name: 'Колядичи', time: `${addMinutes(h, m, 11)} - ${addMinutes(h, m, 12)}`, type: 'остановка 1 мин' },
-                    { name: 'Мачулищи', time: `${addMinutes(h, m, 17)} - ${addMinutes(h, m, 18)}`, type: 'остановка 1 мин' },
-                    { name: 'Михановичи', time: addMinutes(h, m, 23), type: 'прибытие' }
+                    { name: 'Минск-Южный', time: `${addMinutes(h, m, 4)} - ${addMinutes(h, m, 5)}`, type: 'остановка 1 мин' },
+                    { name: 'Лошица', time: `${addMinutes(h, m, 8)} - ${addMinutes(h, m, 9)}`, type: 'остановка 1 мин' },
+                    { name: 'Колядичи', time: `${addMinutes(h, m, 13)} - ${addMinutes(h, m, 14)}`, type: 'остановка 1 мин' },
+                    { name: 'Мачулищи', time: `${addMinutes(h, m, 18)} - ${addMinutes(h, m, 19)}`, type: 'остановка 1 мин' },
+                    { name: 'Асеевка', time: `${addMinutes(h, m, 21)} - ${addMinutes(h, m, 22)}`, type: 'остановка 1 мин' },
+                    { name: 'Михановичи', time: addMinutes(h, m, 25), type: 'прибытие' }
                 ];
             }
         }
 
         const rawDataMihMinsk = [
-            { number: '6802', dep: '05:12', arr: '05:34', duration: '22 мин', days: 'ежедневно', platform: 'Путь 2' },
-            { number: '6804', dep: '06:24', arr: '06:46', duration: '22 мин', days: 'ежедневно', platform: 'Путь 1' },
-            { number: '6808', dep: '07:15', arr: '07:37', duration: '22 мин', days: 'пн-пт', platform: 'Путь 2' },
-            { number: '6812', dep: '08:05', arr: '08:28', duration: '23 мин', days: 'ежедневно', platform: 'Путь 1' },
-            { number: '6816', dep: '09:40', arr: '10:03', duration: '23 мин', days: 'ежедневно', platform: 'Путь 2' },
-            { number: '6822', dep: '12:15', arr: '12:38', duration: '23 мин', days: 'ежедневно', platform: 'Путь 1' },
-            { number: '6828', dep: '14:50', arr: '15:13', duration: '23 мин', days: 'ежедневно', platform: 'Путь 2' },
-            { number: '6834', dep: '16:30', arr: '16:53', duration: '23 мин', days: 'пн-пт', platform: 'Путь 1' },
-            { number: '6838', dep: '17:45', arr: '18:08', duration: '23 мин', days: 'ежедневно', platform: 'Путь 2' },
-            { number: '6844', dep: '19:20', arr: '19:43', duration: '23 мин', days: 'ежедневно', platform: 'Путь 1' },
-            { number: '6850', dep: '21:10', arr: '21:33', duration: '23 мин', days: 'ежедневно', platform: 'Путь 2' },
-            { number: '6854', dep: '23:05', arr: '23:28', duration: '23 мин', days: 'ежедневно', platform: 'Путь 1' }
+            { number: '6802', dep: '05:12', arr: '05:36', duration: '24 мин', days: 'ежедневно', platform: 'Путь 2' },
+            { number: '6804', dep: '06:24', arr: '06:48', duration: '24 мин', days: 'ежедневно', platform: 'Путь 1' },
+            { number: '6808', dep: '07:15', arr: '07:39', duration: '24 мин', days: 'пн-пт', platform: 'Путь 2' },
+            { number: '6812', dep: '08:05', arr: '08:29', duration: '24 мин', days: 'ежедневно', platform: 'Путь 1' },
+            { number: '6816', dep: '09:40', arr: '10:04', duration: '24 мин', days: 'ежедневно', platform: 'Путь 2' },
+            { number: '6822', dep: '12:15', arr: '12:39', duration: '24 мин', days: 'ежедневно', platform: 'Путь 1' },
+            { number: '6828', dep: '14:50', arr: '15:14', duration: '24 мин', days: 'ежедневно', platform: 'Путь 2' },
+            { number: '6834', dep: '16:30', arr: '16:54', duration: '24 мин', days: 'пн-пт', platform: 'Путь 1' },
+            { number: '6838', dep: '17:45', arr: '18:09', duration: '24 мин', days: 'ежедневно', platform: 'Путь 2' },
+            { number: '6844', dep: '19:20', arr: '19:44', duration: '24 мин', days: 'ежедневно', platform: 'Путь 1' },
+            { number: '6850', dep: '21:10', arr: '21:34', duration: '24 мин', days: 'ежедневно', platform: 'Путь 2' },
+            { number: '6854', dep: '23:05', arr: '23:29', duration: '24 мин', days: 'ежедневно', platform: 'Путь 1' }
         ];
 
         const rawDataMinskMih = [
-            { number: '6801', dep: '05:45', arr: '06:08', duration: '23 мин', days: 'ежедневно', platform: 'Пл. 3, Путь 7' },
-            { number: '6805', dep: '06:55', arr: '07:18', duration: '23 мин', days: 'ежедневно', platform: 'Пл. 2, Путь 5' },
-            { number: '6809', dep: '08:30', arr: '08:53', duration: '23 мин', days: 'пн-пт', platform: 'Пл. 3, Путь 6' },
-            { number: '6815', dep: '10:15', arr: '10:38', duration: '23 мин', days: 'ежедневно', platform: 'Пл. 2, Путь 4' },
-            { number: '6821', dep: '13:00', arr: '13:23', duration: '23 мин', days: 'ежедневно', platform: 'Пл. 3, Путь 7' },
-            { number: '6827', dep: '15:40', arr: '16:03', duration: '23 мин', days: 'ежедневно', platform: 'Пл. 2, Путь 5' },
-            { number: '6833', dep: '17:10', arr: '17:33', duration: '23 мин', days: 'ежедневно', platform: 'Пл. 3, Путь 6' },
-            { number: '6837', dep: '18:25', arr: '18:48', duration: '23 мин', days: 'пн-пт', platform: 'Пл. 2, Путь 4' },
-            { number: '6843', dep: '20:05', arr: '20:28', duration: '23 мин', days: 'ежедневно', platform: 'Пл. 3, Путь 7' },
-            { number: '6849', dep: '22:15', arr: '22:38', duration: '23 мин', days: 'ежедневно', platform: 'Пл. 2, Путь 5' }
+            { number: '6801', dep: '05:45', arr: '06:10', duration: '25 мин', days: 'ежедневно', platform: 'Пл. 3, Путь 7' },
+            { number: '6805', dep: '06:55', arr: '07:20', duration: '25 мин', days: 'ежедневно', platform: 'Пл. 2, Путь 5' },
+            { number: '6809', dep: '08:30', arr: '08:55', duration: '25 мин', days: 'пн-пт', platform: 'Пл. 3, Путь 6' },
+            { number: '6815', dep: '10:15', arr: '10:40', duration: '25 мин', days: 'ежедневно', platform: 'Пл. 2, Путь 4' },
+            { number: '6821', dep: '13:00', arr: '13:25', duration: '25 мин', days: 'ежедневно', platform: 'Пл. 3, Путь 7' },
+            { number: '6827', dep: '15:40', arr: '16:05', duration: '25 мин', days: 'ежедневно', platform: 'Пл. 2, Путь 5' },
+            { number: '6833', dep: '17:10', arr: '17:35', duration: '25 мин', days: 'ежедневно', platform: 'Пл. 3, Путь 6' },
+            { number: '6837', dep: '18:25', arr: '18:50', duration: '25 мин', days: 'пн-пт', platform: 'Пл. 2, Путь 4' },
+            { number: '6843', dep: '20:05', arr: '20:30', duration: '25 мин', days: 'ежедневно', platform: 'Пл. 3, Путь 7' },
+            { number: '6849', dep: '22:15', arr: '22:40', duration: '25 мин', days: 'ежедневно', platform: 'Пл. 2, Путь 5' }
         ];
 
         let currentRoute = 'mih-minsk';
@@ -326,10 +327,10 @@
                             </div>
                         </div>
 
-                        <!-- Раскрывающийся список станций -->
+                        <!-- Раскрывающийся полный список станций включая Асеевку -->
                         <div class="${isExpanded ? 'block' : 'hidden'} bg-zinc-950/90 border-t border-cardBorder p-3.5">
                             <div class="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-                                <i class="fa-solid fa-route text-emerald-400"></i> Маршрут рейса №${item.number}
+                                <i class="fa-solid fa-route text-emerald-400"></i> Все остановки рейса №${item.number}
                             </div>
                             <div class="space-y-2 pl-2 border-l-2 border-emerald-500/30 ml-1.5">
                                 ${item.stops.map(stop => `
