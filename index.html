@@ -116,6 +116,7 @@
         <div class="bg-cardBg border border-cardBorder rounded-2xl p-3 shadow-lg space-y-2.5">
             <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
                 <button onclick="filterTime('next3h')" id="filter-next3h" class="px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all whitespace-nowrap active:scale-95">⚡ Ближайшие 3ч</button>
+                <button onclick="filterTime('favorites')" id="filter-favorites" class="px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all whitespace-nowrap active:scale-95">⭐ Избранное</button>
                 <button onclick="filterTime('all')" id="filter-all" class="px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all whitespace-nowrap active:scale-95">Все</button>
                 <button onclick="filterTime('morning')" id="filter-morning" class="px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all whitespace-nowrap active:scale-95">Утро</button>
                 <button onclick="filterTime('day')" id="filter-day" class="px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all whitespace-nowrap active:scale-95">День</button>
@@ -151,6 +152,19 @@
 
     <!-- Скрипты -->
     <script>
+        let favorites = JSON.parse(localStorage.getItem('rw_favorites')) || [];
+
+        function toggleFavorite(trainNumber, event) {
+            event.stopPropagation();
+            if (favorites.includes(trainNumber)) {
+                favorites = favorites.filter(num => num !== trainNumber);
+            } else {
+                favorites.push(trainNumber);
+            }
+            localStorage.setItem('rw_favorites', JSON.stringify(favorites));
+            renderSchedule();
+        }
+
         function generateStops(depTime, direction) {
             const [h, m] = depTime.split(':').map(Number);
             const addMinutes = (hours, mins, add) => {
@@ -244,12 +258,14 @@
 
         function filterTime(filter) {
             currentTimeFilter = filter;
-            ['next3h', 'all', 'morning', 'day', 'evening'].forEach(f => {
+            ['next3h', 'favorites', 'all', 'morning', 'day', 'evening'].forEach(f => {
                 const b = document.getElementById(`filter-${f}`);
-                if (f === filter) {
-                    b.className = "px-3 py-1.5 rounded-xl text-[11px] font-medium bg-emerald-600 text-white shadow-md shadow-emerald-600/20 transition-all whitespace-nowrap active:scale-95";
-                } else {
-                    b.className = "px-3 py-1.5 rounded-xl text-[11px] font-medium bg-zinc-900 border border-zinc-800 text-zinc-400 hover:bg-zinc-800 transition-all whitespace-nowrap active:scale-95";
+                if (b) {
+                    if (f === filter) {
+                        b.className = "px-3 py-1.5 rounded-xl text-[11px] font-medium bg-emerald-600 text-white shadow-md shadow-emerald-600/20 transition-all whitespace-nowrap active:scale-95";
+                    } else {
+                        b.className = "px-3 py-1.5 rounded-xl text-[11px] font-medium bg-zinc-900 border border-zinc-800 text-zinc-400 hover:bg-zinc-800 transition-all whitespace-nowrap active:scale-95";
+                    }
                 }
             });
             renderSchedule();
@@ -276,6 +292,8 @@
                 let matchTime = true;
                 if (currentTimeFilter === 'next3h') {
                     matchTime = trainTotalMin >= currentTotalMin && trainTotalMin <= (currentTotalMin + 180);
+                } else if (currentTimeFilter === 'favorites') {
+                    matchTime = favorites.includes(item.number);
                 } else if (currentTimeFilter === 'morning') {
                     matchTime = h >= 4 && h < 12;
                 } else if (currentTimeFilter === 'day') {
@@ -301,11 +319,15 @@
 
             listContainer.innerHTML = filtered.map(item => {
                 const isExpanded = expandedTrainNumber === item.number;
+                const isFav = favorites.includes(item.number);
                 return `
                     <div class="transition-all">
                         <div onclick="toggleDetails('${item.number}')" class="p-3.5 hover:bg-zinc-900/50 transition-all flex items-center justify-between gap-2 cursor-pointer">
                             <div class="flex items-center gap-2.5 min-w-0">
-                                <div class="bg-zinc-900 border border-zinc-800 text-emerald-400 font-bold px-2 py-1.5 rounded-lg text-[11px] font-mono shrink-0">
+                                <button onclick="toggleFavorite('${item.number}', event)" class="text-zinc-600 hover:text-amber-400 transition-colors p-1 text-sm">
+                                    <i class="fa-${isFav ? 'solid' : 'regular'} fa-star ${isFav ? 'text-amber-400' : ''}"></i>
+                                </button>
+                                <div class="bg-zinc-900 border border-zinc-800 text-emerald-400 font-bold px-2.5 py-1.5 rounded-lg text-[11px] font-mono shrink-0">
                                     №${item.number}
                                 </div>
                                 <div class="min-w-0">
@@ -327,7 +349,7 @@
                             </div>
                         </div>
 
-                        <!-- Раскрывающийся полный список станций включая Асеевку -->
+                        <!-- Раскрывающийся полный список станций -->
                         <div class="${isExpanded ? 'block' : 'hidden'} bg-zinc-950/90 border-t border-cardBorder p-3.5">
                             <div class="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
                                 <i class="fa-solid fa-route text-emerald-400"></i> Все остановки рейса №${item.number}
